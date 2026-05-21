@@ -1,0 +1,28 @@
+// .vscode/launch.json
+{
+    "version": "0.2.0",
+    "configurations": [
+      {
+        "name": "🛠 Debug",
+        "type": "debugpy",
+        "request": "launch",
+
+        // "module" : "experiments.main_train_v4",
+        // "module": "experiments.main_test",
+
+        "module" : "experiments.inspect_gifteval",
+
+        "cwd": "${workspaceFolder}",
+        "console": "integratedTerminal",
+        "env": {
+          // Añade project_root a sys.path para que importe lib/
+          "PYTHONPATH": "${workspaceFolder}",
+          "CUDA_VISIBLE_DEVICES": "0",
+        },
+        "justMyCode": false,
+        "args": [
+        ]
+      }
+    ]
+  }
+  
