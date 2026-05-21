@@ -322,7 +322,22 @@ def inspect_dataset(
         term=spec.term,
         to_univariate=spec.to_univariate,
     )
-    entries = list(_iter_limited(ge_dataset.training_dataset, max_series))
+    entries = []
+    skipped = 0
+    raw_iter = iter(ge_dataset.training_dataset)
+    count = 0
+    while max_series is None or count < max_series:
+        try:
+            entry = next(raw_iter)
+        except StopIteration:
+            break
+        except Exception as exc:
+            skipped += 1
+            continue
+        entries.append(entry)
+        count += 1
+    if skipped:
+        print(f"  Skipped {skipped} malformed entries (0-dim target or GluonTS split error)")
 
     ds_out = out_root / _safe_path_part(spec.display) / _safe_path_part(spec.term)
     ds_out.mkdir(parents=True, exist_ok=True)
