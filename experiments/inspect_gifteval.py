@@ -35,6 +35,10 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, List, Optional, Sequence, Tuple
+
+from dotenv import load_dotenv
+load_dotenv()
+
 # import numpy as np
 
 np = None
@@ -454,8 +458,24 @@ def filtered_specs(args: argparse.Namespace) -> List[DatasetSpec]:
     return specs
 
 
+def _check_gift_eval_env():
+    gift_eval = os.environ.get("GIFT_EVAL")
+    if not gift_eval:
+        raise EnvironmentError(
+            "GIFT_EVAL environment variable is not set.\n"
+            "Add 'GIFT_EVAL=/path/to/gift-eval' to your .env file at the repo root."
+        )
+    if not Path(gift_eval).exists():
+        raise EnvironmentError(
+            f"GIFT_EVAL path does not exist: {gift_eval}\n"
+            "Check your .env file at the repo root."
+        )
+    print(f"GIFT_EVAL={gift_eval}")
+
+
 def main():
     args = parse_args()
+    _check_gift_eval_env()
     _ensure_runtime_deps(needs_plot=False)
 
     out_root = Path(args.out_dir)
